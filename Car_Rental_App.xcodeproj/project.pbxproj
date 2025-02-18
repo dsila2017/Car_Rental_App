@@ -14,7 +14,7 @@
 		63CF941D2D650A0F00EDCF58 /* Exceptions for "Car_Rental_App" folder in "Car_Rental_App" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				SupportingFiles/Info.plist,
 			);
 			target = 63CF940A2D650A0E00EDCF58 /* Car_Rental_App */;
 		};
@@ -147,7 +147,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 25A9GC2B9J;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Car_Rental_App/Info.plist;
+				INFOPLIST_FILE = Car_Rental_App/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -175,7 +175,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 25A9GC2B9J;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Car_Rental_App/Info.plist;
+				INFOPLIST_FILE = Car_Rental_App/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
