@@ -1,25 +1,16 @@
-//
-//  ViewController.swift
-//  Car_Rental_App
-//
-//  Created by David on 2/18/25.
-//
-
 import UIKit
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
     
     lazy var topView: UIView = {
         let topView = UIView()
         topView.translatesAutoresizingMaskIntoConstraints = false
-        topView.backgroundColor = .white
         return topView
     }()
     
     lazy var bottomView: UIView = {
         let bottomView = UIView()
         bottomView.translatesAutoresizingMaskIntoConstraints = false
-        bottomView.backgroundColor = .red
         return bottomView
     }()
     
@@ -27,31 +18,38 @@ class ViewController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "car")
+        imageView.tintColor = .black
         return imageView
     }()
     
     lazy var loginItemsView: UIView = {
         let imageView = UIView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .systemPink
         return imageView
     }()
     
-    lazy var loginItemsStackView: UIStackView = {
+    lazy var textFieldsStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 20
         
-        stackView.backgroundColor = .yellow
+        return stackView
+    }()
+    
+    lazy var loginItemsStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [textFieldsStackView, forgotButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.spacing = 20
         
         return stackView
     }()
     
     lazy var emailTextField: CustomTextField = {
         let textField = CustomTextField()
-        textField.backgroundColor = .red
         textField.placeholder = "Email"
         return textField
     }()
@@ -59,7 +57,6 @@ class ViewController: UIViewController {
     lazy var passwordTextField: CustomTextField = {
         let textField = CustomTextField()
         textField.placeholder = "Password"
-        textField.backgroundColor = .red
         textField.isSecureTextEntry = true
         return textField
     }()
@@ -67,20 +64,25 @@ class ViewController: UIViewController {
     lazy var forgotButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Forgot Password?", for: .normal)
-        button.setTitleColor(.blue, for: .normal)
+        button.configuration = .plain()
+        button.configuration?.title = "Forgot Password?"
+        button.configuration?.baseForegroundColor = .black
         
+        button.addTarget(self, action: #selector(buttonTapped1), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var loginButton: CustomButton = {
+        let button = CustomButton(name: "Log In", style: .primary)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return button
     }()
     
-    lazy var loginButton: UIButton = {
-        let button = UIButton()
+    lazy var signUpButton: CustomButton = {
+        let button = CustomButton(name: "SignUp", style: .secondary)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.configuration = .filled()
-        button.configuration?.title = "Button x"
-        
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        button.addTarget(nil, action: #selector(signUpButtonAction), for: .touchUpInside)
         return button
     }()
     
@@ -88,33 +90,39 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        view.backgroundColor = .cyan
-        setupButton()
+        view.backgroundColor = .white
+        setupUI()
     }
     
-    @objc func buttonTapped() {
-        
-        print(self)
+    @objc func buttonTapped(_ sender: UIButton) {
+        guard let senderTitle = sender.titleLabel!.text else { return }
+        print(senderTitle)
+    }
+    
+    @objc func buttonTapped1(_ sender: UIButton) {
+        guard let senderTitle = sender.titleLabel!.text else { return }
+        print(senderTitle)
+    }
+    
+    @objc func signUpButtonAction(_ sender: UIButton) {
+        guard let senderTitle = sender.titleLabel!.text else { return }
+        print(senderTitle)
     }
     
     
-    private func setupButton() {
+    private func setupUI() {
         view.addSubview(topView)
         view.addSubview(bottomView)
         
         topView.addSubview(logoImageView)
         topView.addSubview(loginItemsView)
-        //topView.addSubview(forgotButton)
         
         loginItemsView.addSubview(loginItemsStackView)
-        loginItemsView.addSubview(forgotButton)
-        
         
         bottomView.addSubview(loginButton)
-        
+        bottomView.addSubview(signUpButton)
         
         setupConstraints()
-        
     }
     
     private func setupConstraints() {
@@ -123,58 +131,43 @@ class ViewController: UIViewController {
             topView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             topView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5),
-            
+
             bottomView.topAnchor.constraint(equalTo: topView.bottomAnchor),
             bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
+
             logoImageView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            //logoImageView.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
             logoImageView.topAnchor.constraint(equalTo: topView.topAnchor),
             logoImageView.widthAnchor.constraint(equalTo: topView.widthAnchor, multiplier: 0.5),
             logoImageView.heightAnchor.constraint(equalTo: topView.heightAnchor, multiplier: 0.4),
-            
-            loginItemsView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor),
+
+            loginItemsView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 20),
             loginItemsView.leadingAnchor.constraint(equalTo: topView.leadingAnchor),
             loginItemsView.trailingAnchor.constraint(equalTo: topView.trailingAnchor),
             loginItemsView.bottomAnchor.constraint(equalTo: topView.bottomAnchor),
-            
+
             loginItemsStackView.centerXAnchor.constraint(equalTo: loginItemsView.centerXAnchor),
             loginItemsStackView.centerYAnchor.constraint(equalTo: loginItemsView.centerYAnchor),
             loginItemsStackView.leadingAnchor.constraint(equalTo: loginItemsView.leadingAnchor, constant: 20),
             loginItemsStackView.trailingAnchor.constraint(equalTo: loginItemsView.trailingAnchor, constant: -20),
-            loginItemsStackView.heightAnchor.constraint(equalTo: loginItemsView.heightAnchor, multiplier: 0.5),
-            
-            forgotButton.topAnchor.constraint(equalTo: loginItemsStackView.bottomAnchor),
-            forgotButton.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            
-            
+            loginItemsStackView.heightAnchor.constraint(equalTo: loginItemsView.heightAnchor, multiplier: 0.7),
+
+            textFieldsStackView.heightAnchor.constraint(equalTo: loginItemsStackView.heightAnchor, multiplier: 0.8),
+
+            loginButton.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 20),
+            loginButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 20),
+            loginButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -20),
+            loginButton.heightAnchor.constraint(equalTo: emailTextField.heightAnchor),
+
+            signUpButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 10),
+            signUpButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 20),
+            signUpButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -20),
+            signUpButton.heightAnchor.constraint(equalTo: loginButton.heightAnchor)
         ])
     }
+
+
+
+
 }
-
-import UIKit
-
-class CustomTextField: UITextField {
-    
-    let padding: CGFloat = 20
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.layer.cornerRadius = self.frame.height / 2
-    }
-    
-    override func textRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.insetBy(dx: padding, dy: 0)
-    }
-    
-    override func editingRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.insetBy(dx: padding, dy: 0)
-    }
-    
-    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.insetBy(dx: padding, dy: 0)
-    }
-}
-
