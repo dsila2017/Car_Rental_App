@@ -107,10 +107,21 @@ final class ViewController: UIViewController {
     @objc func signUpButtonAction(_ sender: UIButton) {
         guard let senderTitle = sender.titleLabel!.text else { return }
         print(senderTitle)
+        
+        let signUpVC = SignUpViewController()
+        navigationController?.pushViewController(signUpVC, animated: true)
+    }
+    
+    private func setupNavigationBar() {
+        title = "Welcome back!"
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     
     private func setupUI() {
+        
+        setupNavigationBar()
+        
         view.addSubview(topView)
         view.addSubview(bottomView)
         
