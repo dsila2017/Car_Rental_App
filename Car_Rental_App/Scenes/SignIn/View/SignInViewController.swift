@@ -1,6 +1,6 @@
 import UIKit
 
-final class ViewController: UIViewController {
+final class SignInViewController: UIViewController {
     
     lazy var topView: UIView = {
         let topView = UIView()
@@ -68,14 +68,14 @@ final class ViewController: UIViewController {
         button.configuration?.title = "Forgot Password?"
         button.configuration?.baseForegroundColor = .black
         
-        button.addTarget(self, action: #selector(buttonTapped1), for: .touchUpInside)
+        button.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
         return button
     }()
     
     lazy var loginButton: CustomButton = {
         let button = CustomButton(name: "Log In", style: .primary)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -86,31 +86,66 @@ final class ViewController: UIViewController {
         return button
     }()
     
+    private var viewModel: SignInViewModel?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        viewModel = SignInViewModel()
         
         view.backgroundColor = .white
         setupUI()
     }
     
-    @objc func buttonTapped(_ sender: UIButton) {
-        guard let senderTitle = sender.titleLabel!.text else { return }
-        print(senderTitle)
+    @objc func loginButtonTapped(_ sender: UIButton) {
+        guard let email = emailTextField.text, !email.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty else {
+            showError("Please enter both email and password.")
+            return
+        }
+        viewModel?.signIn(email: email, password: password) { [weak self] result in
+            switch result {
+            case .success:
+                print("Login successful")
+                
+            case .failure(let error):
+                self?.showError("Login failed: \(error.localizedDescription)")
+            }
+        }
     }
     
-    @objc func buttonTapped1(_ sender: UIButton) {
-        guard let senderTitle = sender.titleLabel!.text else { return }
-        print(senderTitle)
+    @objc func resetButtonTapped(_ sender: UIButton) {
+        guard let email = emailTextField.text, !email.isEmpty else {
+            return self.showError("Please Enter Email")
+        }
+        viewModel?.resetPassword(email: email, forgotCompletion: { [weak self] result in
+                switch result {
+                case .success:
+                    self?.showError("Email sent successfully")
+                case .failure(let error):
+                    self?.showError("Error: \(error.localizedDescription)")
+                }
+            })
     }
     
     @objc func signUpButtonAction(_ sender: UIButton) {
         guard let senderTitle = sender.titleLabel!.text else { return }
         print(senderTitle)
+        
+        let signUpVC = SignUpViewController()
+        navigationController?.pushViewController(signUpVC, animated: true)
+    }
+    
+    private func setupNavigationBar() {
+        title = "Welcome back!"
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     
     private func setupUI() {
+        
+        setupNavigationBar()
+        
         view.addSubview(topView)
         view.addSubview(bottomView)
         
@@ -138,7 +173,7 @@ final class ViewController: UIViewController {
             bottomView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
 
             logoImageView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-            logoImageView.topAnchor.constraint(equalTo: topView.topAnchor),
+            logoImageView.topAnchor.constraint(equalTo: topView.topAnchor, constant: 20),
             logoImageView.widthAnchor.constraint(equalTo: topView.widthAnchor, multiplier: 0.5),
             logoImageView.heightAnchor.constraint(equalTo: topView.heightAnchor, multiplier: 0.4),
 
@@ -170,4 +205,14 @@ final class ViewController: UIViewController {
 
 
 
+}
+
+extension UIViewController {
+    
+    func showError(_ message: String) {
+        let alertController = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(action)
+        present(alertController, animated: true, completion: nil)
+    }
 }
