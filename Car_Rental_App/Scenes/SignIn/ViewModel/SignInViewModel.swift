@@ -9,8 +9,7 @@ import Foundation
 import FirebaseAuth
 
 class SignInViewModel {
-
-    // Method for signing in a user
+    
     func signIn(email: String, password: String, authenticationCompletion: @escaping (Result<Void, Error>) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if let error = error {
@@ -20,6 +19,18 @@ class SignInViewModel {
             }
             
             authenticationCompletion(.success(()))
+        }
+    }
+    
+    func resetPassword(email: String, forgotCompletion: @escaping (Result<Void, Error>) -> Void) {
+        Auth.auth().sendPasswordReset(withEmail: email) { error in
+            if let error = error {
+                
+                forgotCompletion(.failure(error))
+            } else {
+                
+                forgotCompletion(.success(()))
+            }
         }
     }
 }
