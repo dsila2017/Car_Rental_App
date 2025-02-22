@@ -8,7 +8,7 @@
 import UIKit
 
 class SignUpViewController: UIViewController {
-
+    
     lazy var topView: UIView = {
         let topView = UIView()
         topView.translatesAutoresizingMaskIntoConstraints = false
@@ -82,18 +82,38 @@ class SignUpViewController: UIViewController {
         return button
     }()
     
+    private var viewModel: SignUpViewModel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         
+        self.viewModel = SignUpViewModel()
         view.backgroundColor = .white
         setupNavigationBar()
         setupUI()
     }
     
     @objc func handleSignUp() {
+        guard let name = nameTextField.text, !name.isEmpty,
+              let email = emailTextField.text, !email.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty else {
+            showError("Please fill in all fields.")
+            return
+        }
         
+        viewModel.signUp(email: email, password: password) { result in
+            switch result {
+            case .success:
+                
+                print("Registration successful!")
+                self.navigationController?.popToRootViewController(animated: true)
+            case .failure(let error):
+                
+                self.showError(error.localizedDescription)
+            }
+        }
     }
     
     @objc func cancelSignUp() {
@@ -130,7 +150,7 @@ class SignUpViewController: UIViewController {
             topView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             topView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5),
-
+            
             bottomView.topAnchor.constraint(equalTo: topView.bottomAnchor),
             bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -153,7 +173,6 @@ class SignUpViewController: UIViewController {
             textFieldsStackView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 20),
             textFieldsStackView.leadingAnchor.constraint(equalTo: topView.leadingAnchor, constant: 20),
             textFieldsStackView.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -20),
-            //textFieldsStackView.heightAnchor.constraint(equalTo: topView.heightAnchor, multiplier: 0.3),
             textFieldsStackView.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -40),
             
             signUpButton.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 20),
@@ -168,5 +187,5 @@ class SignUpViewController: UIViewController {
             
         ])
     }
-
+    
 }

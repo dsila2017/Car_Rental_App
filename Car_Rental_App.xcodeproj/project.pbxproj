@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		63CF94872D6A8BF400EDCF58 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 63CF94862D6A8BF400EDCF58 /* FirebaseAnalytics */; };
+		63CF94892D6A8BF400EDCF58 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 63CF94882D6A8BF400EDCF58 /* FirebaseAuth */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		63CF940B2D650A0E00EDCF58 /* Car_Rental_App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Car_Rental_App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63CF94872D6A8BF400EDCF58 /* FirebaseAnalytics in Frameworks */,
+				63CF94892D6A8BF400EDCF58 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +85,8 @@
 			);
 			name = Car_Rental_App;
 			packageProductDependencies = (
+				63CF94862D6A8BF400EDCF58 /* FirebaseAnalytics */,
+				63CF94882D6A8BF400EDCF58 /* FirebaseAuth */,
 			);
 			productName = Car_Rental_App;
 			productReference = 63CF940B2D650A0E00EDCF58 /* Car_Rental_App.app */;
@@ -107,6 +116,9 @@
 			);
 			mainGroup = 63CF94022D650A0E00EDCF58;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				63CF94852D6A8BF400EDCF58 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 63CF940C2D650A0E00EDCF58 /* Products */;
 			projectDirPath = "";
@@ -333,6 +345,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		63CF94852D6A8BF400EDCF58 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.8.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		63CF94862D6A8BF400EDCF58 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 63CF94852D6A8BF400EDCF58 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		63CF94882D6A8BF400EDCF58 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 63CF94852D6A8BF400EDCF58 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 63CF94032D650A0E00EDCF58 /* Project object */;
 }

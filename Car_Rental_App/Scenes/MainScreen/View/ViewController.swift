@@ -75,7 +75,7 @@ final class ViewController: UIViewController {
     lazy var loginButton: CustomButton = {
         let button = CustomButton(name: "Log In", style: .primary)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -86,17 +86,32 @@ final class ViewController: UIViewController {
         return button
     }()
     
+    private var viewModel: SignInViewModel?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        viewModel = SignInViewModel()
         
         view.backgroundColor = .white
         setupUI()
     }
     
-    @objc func buttonTapped(_ sender: UIButton) {
-        guard let senderTitle = sender.titleLabel!.text else { return }
-        print(senderTitle)
+    @objc func loginButtonTapped(_ sender: UIButton) {
+        guard let email = emailTextField.text, !email.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty else {
+            showError("Please enter both email and password.")
+            return
+        }
+        viewModel?.signIn(email: email, password: password) { [weak self] result in
+            switch result {
+            case .success:
+                print("Login successful")
+                
+            case .failure(let error):
+                self?.showError("Login failed: \(error.localizedDescription)")
+            }
+        }
     }
     
     @objc func buttonTapped1(_ sender: UIButton) {
@@ -181,4 +196,14 @@ final class ViewController: UIViewController {
 
 
 
+}
+
+extension UIViewController {
+    
+    func showError(_ message: String) {
+        let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(action)
+        present(alertController, animated: true, completion: nil)
+    }
 }
