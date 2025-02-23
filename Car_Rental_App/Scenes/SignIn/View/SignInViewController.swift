@@ -106,7 +106,7 @@ final class SignInViewController: UIViewController {
         viewModel?.signIn(email: email, password: password) { [weak self] result in
             switch result {
             case .success:
-                print("Login successful")
+                self?.navigationController?.pushViewController(ProductsViewController(), animated: true)
                 
             case .failure(let error):
                 self?.showError("Login failed: \(error.localizedDescription)")
