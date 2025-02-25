@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		638E2B8C2D6E6060009E13BB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 638E2B8B2D6E6060009E13BB /* Kingfisher */; };
 		63CF94872D6A8BF400EDCF58 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 63CF94862D6A8BF400EDCF58 /* FirebaseAnalytics */; };
 		63CF94892D6A8BF400EDCF58 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 63CF94882D6A8BF400EDCF58 /* FirebaseAuth */; };
 /* End PBXBuildFile section */
@@ -41,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				638E2B8C2D6E6060009E13BB /* Kingfisher in Frameworks */,
 				63CF94872D6A8BF400EDCF58 /* FirebaseAnalytics in Frameworks */,
 				63CF94892D6A8BF400EDCF58 /* FirebaseAuth in Frameworks */,
 			);
@@ -87,6 +89,7 @@
 			packageProductDependencies = (
 				63CF94862D6A8BF400EDCF58 /* FirebaseAnalytics */,
 				63CF94882D6A8BF400EDCF58 /* FirebaseAuth */,
+				638E2B8B2D6E6060009E13BB /* Kingfisher */,
 			);
 			productName = Car_Rental_App;
 			productReference = 63CF940B2D650A0E00EDCF58 /* Car_Rental_App.app */;
@@ -118,6 +121,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				63CF94852D6A8BF400EDCF58 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				638E2B8A2D6E6060009E13BB /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 63CF940C2D650A0E00EDCF58 /* Products */;
@@ -347,6 +351,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		638E2B8A2D6E6060009E13BB /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.2.0;
+			};
+		};
 		63CF94852D6A8BF400EDCF58 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -358,6 +370,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		638E2B8B2D6E6060009E13BB /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 638E2B8A2D6E6060009E13BB /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		63CF94862D6A8BF400EDCF58 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 63CF94852D6A8BF400EDCF58 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

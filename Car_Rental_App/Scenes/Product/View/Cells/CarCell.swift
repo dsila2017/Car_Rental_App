@@ -1,10 +1,18 @@
 import Foundation
 import UIKit
+import Kingfisher
 
 class CarCell: UICollectionViewCell {
     
     // MARK: - Properties
     static let reuseIdentifier = "CarCell"
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -42,7 +50,6 @@ class CarCell: UICollectionViewCell {
         return label
     }()
     
-    // Horizontal stack view for engine type and msrp labels
     private let engineTypeAndMsrpStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -63,6 +70,11 @@ class CarCell: UICollectionViewCell {
         setupCellStyle()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+    }
+    
     private func setupCellStyle() {
         contentView.layer.cornerRadius = 12
         contentView.clipsToBounds = true
@@ -72,11 +84,11 @@ class CarCell: UICollectionViewCell {
     
     private func setupViews() {
         contentView.addSubview(imageView)
+        imageView.addSubview(activityIndicator)
         contentView.addSubview(brandLabel)
         contentView.addSubview(modelLabel)
         contentView.addSubview(engineTypeAndMsrpStackView)
         
-        // Add engineTypeLabel and msrpLabel to the stack view
         engineTypeAndMsrpStackView.addArrangedSubview(engineTypeLabel)
         engineTypeAndMsrpStackView.addArrangedSubview(msrpLabel)
         
@@ -90,6 +102,9 @@ class CarCell: UICollectionViewCell {
             imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             imageView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.7),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
             
             brandLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4),
             brandLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
@@ -108,17 +123,32 @@ class CarCell: UICollectionViewCell {
     }
     
     func configure(with brand: String, model: String, engineType: String, msrp: Int) {
-        NetworkManager.shared.fetchImage(url: "https://cdn.imagin.studio/getimage?customer=img&zoomType=fullscreen&paintdescription=radiant-green&modelFamily=\(model)&make=\(brand)&modelYear=2020&angle=front", completion: { [weak self] result in
-            switch result {
-                case .success(let image):
-                self?.imageView.image = image
-            case .failure:
-                break
+        activityIndicator.startAnimating()
+        let imageURLString = "https://cdn.imagin.studio/getimage?customer=img&zoomType=fullscreen&randomPaint=true&modelFamily=\(model)&make=\(brand)&modelYear=2020&angle=front"
+        
+        let url = URL(string: imageURLString)!
+        
+        imageView.kf.setImage(
+            with: url,
+            placeholder: nil,
+            options: [
+                .cacheOriginalImage
+            ],
+            progressBlock: { receivedSize, totalSize in
+            },
+            completionHandler: { [weak self] result in
+                guard let self = self else { return }
+                self.activityIndicator.stopAnimating()
             }
-        })
+        )
         brandLabel.text = brand
         modelLabel.text = model
         engineTypeLabel.text = engineType
-        msrpLabel.text = String(msrp)
+        msrpLabel.text = "$\(msrp)"
     }
 }
+
+
+/*"https://cdn.imagin.studio/getimage?customer=img&zoomType=fullscreen&paintdescription=Imagin-grey&modelFamily=\(model)&make=\(brand)&modelYear=2020&angle=front"
+ &randomPaint=true
+ */

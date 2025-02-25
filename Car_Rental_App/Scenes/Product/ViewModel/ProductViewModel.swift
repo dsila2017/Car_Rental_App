@@ -14,12 +14,15 @@ class ProductViewModel {
     
     var brandList: [String] = ["Tesla", "Toyota", "Honda", "Ford", "Nissan", "Audi", "BMW", "Volvo", "Mercedes", "Kia"]
     
+    var mainTextLabel: String = "Featured"
+    
     var carList: [Engine] = []
     
     var reloadCollectionView: (() -> Void)?
+    var reloadUIComponents: (() -> Void)?
     
-    func fetchCars() {
-        networkManager.fetchEngineData { [weak self] result in
+    func fetchCars(with: FetchType) {
+        networkManager.fetchEngineData(with: with) { [weak self] result in
             switch result {
                 case .success(let engineResponse):
                 self?.carList = engineResponse
@@ -29,5 +32,10 @@ class ProductViewModel {
                 print("Error: \(error)")
             }
         }
+    }
+    
+    func updateMainLabelText(to newText: String) {
+        mainTextLabel = newText
+        self.reloadUIComponents?()
     }
 }

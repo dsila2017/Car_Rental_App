@@ -154,19 +154,17 @@ public class NetworkManager {
     }
 
     
-    func fetchEngineData(completion: @escaping (Result<[Engine], Error>) -> Void) {
-        let url = "https://car-api2.p.rapidapi.com/api/engines?limit=10&verbose=yes&year=2020&page=1&direction=asc&sort=cylinders"
+    func fetchEngineData(with: FetchType, completion: @escaping (Result<[Engine], Error>) -> Void) {
+        let url = "https://car-api2.p.rapidapi.com/api/engines?limit=24&verbose=yes&year=2020&page=1&direction=desc&sort=\(with)"
         
         let headers = [
             "x-rapidapi-key": "cf9c2725b9msh661dfd01332799ap12f657jsn999a050acd54",
             "x-rapidapi-host": "car-api2.p.rapidapi.com"
         ]
         
-        // Now decoding to EngineResponse instead of [EngineResponse]
         fetchDataAPI(url: url, headers: headers) { (result: Result<EngineResponse, Error>) in
             switch result {
             case .success(let response):
-                // Return only the "data" array, which is an array of Engine objects
                 completion(.success(response.data))
             case .failure(let error):
                 completion(.failure(error))
@@ -179,4 +177,8 @@ public class NetworkManager {
     enum NetworkError: Error {
         case invalidURL, httpError(statusCode: Int), noData, decodingFailed
     }
+}
+
+enum FetchType {
+    case size, horsepower_hp, transmission, fuel_type
 }
