@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ProductsViewController: UIViewController {
     
@@ -74,7 +75,8 @@ class ProductsViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationItem.hidesBackButton = true
-        navigationItem.title = "Hello User!"
+        //navigationItem.title = "Hello User!"
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
         
         viewModel = ProductViewModel()
         
@@ -189,7 +191,8 @@ extension ProductsViewController: UICollectionViewDataSource {
             return cell
         case 2:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CarCell.reuseIdentifier, for: indexPath) as! CarCell
-            cell.configure(with: viewModel.carList[indexPath.row].makeModelTrim.makeModel.make.name, model: viewModel.carList[indexPath.row].makeModelTrim.makeModel.name, engineType: viewModel.carList[indexPath.row].engineType, msrp: viewModel.carList[indexPath.row].makeModelTrim.msrp)
+            let car = viewModel.carList[indexPath.row]
+            cell.configure(with: car.makeModelTrim.makeModel.make.name, model: car.makeModelTrim.makeModel.name, engineType: car.engineType, msrp: car.makeModelTrim.msrp)
             return cell
         default:
             return UICollectionViewCell()
@@ -213,7 +216,7 @@ extension ProductsViewController: UICollectionViewDelegateFlowLayout {
             let availableWidth = view.frame.width - 20 * 2
             
             let width = (availableWidth - totalHorizontalPadding) / itemsPerRow
-            let height: CGFloat = width * 1.5
+            let height: CGFloat = width * 1.8
             
             return CGSize(width: width, height: height)
             

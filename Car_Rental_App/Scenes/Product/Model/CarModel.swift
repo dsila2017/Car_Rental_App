@@ -17,19 +17,20 @@ struct CarModel {
     let image: UIImage
 }
 
-// Wrapper for the root dictionary (the root key is "data")
 struct EngineResponse: Decodable {
-    let data: [Engine]  // Array of Engine objects
+    let data: [Engine]
 }
 
 // Engine Model
 struct Engine: Decodable {
     let engineType: String
     let makeModelTrim: MakeModelTrim
+    let driveType: String
     
     enum CodingKeys: String, CodingKey {
         case engineType = "engine_type"
         case makeModelTrim = "make_model_trim"
+        case driveType = "drive_type"
     }
 }
 

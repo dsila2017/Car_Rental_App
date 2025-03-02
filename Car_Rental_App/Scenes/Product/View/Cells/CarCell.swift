@@ -14,11 +14,12 @@ class CarCell: UICollectionViewCell {
         return activityIndicator
     }()
     
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .systemGray
+        imageView.backgroundColor = .systemGray4
+        imageView.layer.cornerRadius = 8
         return imageView
     }()
     
@@ -26,6 +27,7 @@ class CarCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textColor = .black
+        //label.backgroundColor = .green
         return label
     }()
     
@@ -33,6 +35,7 @@ class CarCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .gray
+        //label.backgroundColor = .yellow
         return label
     }()
     
@@ -55,6 +58,38 @@ class CarCell: UICollectionViewCell {
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.alignment = .center
+        //stackView.backgroundColor = .red
+        return stackView
+    }()
+    
+    private lazy var bottomStackView: UIStackView = {
+       let stackView = UIStackView(arrangedSubviews: [transmissionStack, wheelDriveStack, msrpStack])
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 0
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        //stackView.backgroundColor = .red
+        return stackView
+    }()
+    
+    private let transmissionStack: CustomLogoStackView = {
+        let stackView = CustomLogoStackView()
+        stackView.configure(image: UIImage(systemName: "steeringwheel")!, color: .darkGray, text: "Auto")
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private let wheelDriveStack: CustomLogoStackView = {
+        let stackView = CustomLogoStackView()
+        stackView.configure(image: UIImage(systemName: "tire")!, color: .darkGray, text: "FWD")
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private let msrpStack: CustomLogoStackView = {
+        let stackView = CustomLogoStackView()
+        stackView.configure(image: UIImage(systemName: "dollarsign.gauge.chart.lefthalf.righthalf")!, color: .darkGray, text: "$246900")
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
@@ -72,14 +107,14 @@ class CarCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        imageView.image = nil
+        clearCell()
     }
     
     private func setupCellStyle() {
         contentView.layer.cornerRadius = 12
         contentView.clipsToBounds = true
         
-        contentView.backgroundColor = .lightGray
+        contentView.backgroundColor = .systemGray5
     }
     
     private func setupViews() {
@@ -87,7 +122,7 @@ class CarCell: UICollectionViewCell {
         imageView.addSubview(activityIndicator)
         contentView.addSubview(brandLabel)
         contentView.addSubview(modelLabel)
-        contentView.addSubview(engineTypeAndMsrpStackView)
+        contentView.addSubview(bottomStackView)
         
         engineTypeAndMsrpStackView.addArrangedSubview(engineTypeLabel)
         engineTypeAndMsrpStackView.addArrangedSubview(msrpLabel)
@@ -98,35 +133,39 @@ class CarCell: UICollectionViewCell {
         engineTypeAndMsrpStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
-            imageView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
-            imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.7),
+            
+            brandLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            brandLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
+            brandLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
+            brandLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.1),
+            
+            modelLabel.topAnchor.constraint(equalTo: brandLabel.bottomAnchor, constant: 0),
+            modelLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
+            modelLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
+            modelLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.07),
+            
+            imageView.topAnchor.constraint(equalTo: modelLabel.bottomAnchor, constant: 8),
+            imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
+            imageView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
+            imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.55),
             
             activityIndicator.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
             
-            brandLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4),
-            brandLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
-            brandLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
-            
-            modelLabel.topAnchor.constraint(equalTo: brandLabel.bottomAnchor, constant: 4),
-            modelLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
-            modelLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
-            
-            engineTypeAndMsrpStackView.topAnchor.constraint(equalTo: modelLabel.bottomAnchor, constant: 4),
-            engineTypeAndMsrpStackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
-            engineTypeAndMsrpStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
-            engineTypeAndMsrpStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            engineTypeAndMsrpStackView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.1)
+            bottomStackView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            bottomStackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
+            bottomStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
+            bottomStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            //bottomStackView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.14)
         ])
     }
     
     func configure(with brand: String, model: String, engineType: String, msrp: Int) {
-        activityIndicator.startAnimating()
         let imageURLString = "https://cdn.imagin.studio/getimage?customer=img&zoomType=fullscreen&randomPaint=true&modelFamily=\(model)&make=\(brand)&modelYear=2020&angle=front"
         
-        let url = URL(string: imageURLString)!
+        guard let url = URL(string: imageURLString) else { return }
+
+        activityIndicator.startAnimating()
         
         imageView.kf.setImage(
             with: url,
@@ -138,7 +177,13 @@ class CarCell: UICollectionViewCell {
             },
             completionHandler: { [weak self] result in
                 guard let self = self else { return }
-                self.activityIndicator.stopAnimating()
+                switch result {
+                case .success:
+                    self.activityIndicator.stopAnimating()
+                case .failure(let error):
+                    print("Error loading image: \(error.localizedDescription)")
+                    self.activityIndicator.stopAnimating()
+                }
             }
         )
         brandLabel.text = brand
@@ -146,9 +191,90 @@ class CarCell: UICollectionViewCell {
         engineTypeLabel.text = engineType
         msrpLabel.text = "$\(msrp)"
     }
+    
+    private func clearCell() {
+        imageView.kf.cancelDownloadTask()
+        imageView.image = nil
+        brandLabel.text = nil
+        modelLabel.text = nil
+        engineTypeLabel.text = nil
+        msrpLabel.text = nil
+        activityIndicator.stopAnimating()
+    }
 }
 
 
 /*"https://cdn.imagin.studio/getimage?customer=img&zoomType=fullscreen&paintdescription=Imagin-grey&modelFamily=\(model)&make=\(brand)&modelYear=2020&angle=front"
  &randomPaint=true
  */
+
+class CustomLogoStackView: UIStackView {
+
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        //imageView.backgroundColor = .green
+        return imageView
+    }()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.systemFont(ofSize: 10, weight: .medium)
+        label.textColor = .darkGray
+        //label.backgroundColor = .yellow
+        return label
+    }()
+
+    // MARK: - Initializers
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+
+    private func setupView() {
+        axis = .vertical
+        distribution = .fillEqually
+        alignment = .center
+        spacing = 2
+        
+        addArrangedSubview(imageView)
+        addArrangedSubview(titleLabel)
+        
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalTo: self.widthAnchor),
+            titleLabel.widthAnchor.constraint(equalTo: self.widthAnchor)
+            ])
+    }
+
+
+    // MARK: - Configuration
+    func configure(image: UIImage?, color: UIColor?, text: String) {
+        imageView.image = image
+        imageView.tintColor = color
+        titleLabel.text = text
+    }
+}
+
+enum AppColor {
+    case customColor1
+    case customColor2
+    
+    var color: UIColor {
+        switch self {
+        case .customColor1:
+            return UIColor(red: 95/255.0, green: 96/255.0, blue: 191/255.0, alpha: 1.0) // RGB (95, 96, 191)
+        case .customColor2:
+            return UIColor(red: 94/255.0, green: 171/255.0, blue: 88/255.0, alpha: 1.0) // RGB (94, 171, 88)
+        }
+    }
+}
