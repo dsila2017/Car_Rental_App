@@ -17,6 +17,7 @@ class ProductsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Brands"
         label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .label
         return label
     }()
     
@@ -25,6 +26,7 @@ class ProductsViewController: UIViewController {
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
         return collectionView
     }()
     
@@ -33,6 +35,7 @@ class ProductsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = viewModel.mainTextLabel
         label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .label
         return label
     }()
 
@@ -40,7 +43,7 @@ class ProductsViewController: UIViewController {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Sort by", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.label, for: .normal)
         
         let menu = UIMenu(title: "Sort By", options: .displayInline, children: [
             UIAction(title: "Engine Type", image: UIImage(systemName: "engine.combustion"), handler: { [weak self] action in
@@ -49,8 +52,7 @@ class ProductsViewController: UIViewController {
             UIAction(title: "Size", image: UIImage(systemName: "car.side"), handler: { [weak self] action in
                 self?.handleSortAction(actionTitle: action.title, filterType: .size)
             }),
-            
-            UIAction(title: "Perfomance", image: UIImage(systemName: "tachometer"), handler: { [weak self] action in
+            UIAction(title: "Performance", image: UIImage(systemName: "tachometer"), handler: { [weak self] action in
                 self?.handleSortAction(actionTitle: action.title, filterType: .horsepower_hp)
             })
         ])
@@ -60,12 +62,12 @@ class ProductsViewController: UIViewController {
         return button
     }()
 
-    
     lazy var bestCarsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
         return collectionView
     }()
     
@@ -75,7 +77,6 @@ class ProductsViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationItem.hidesBackButton = true
-        //navigationItem.title = "Hello User!"
         self.navigationController?.setNavigationBarHidden(true, animated: true)
         
         viewModel = ProductViewModel()
@@ -89,8 +90,7 @@ class ProductsViewController: UIViewController {
         
         viewModel.fetchCars(with: .size)
         
-        // Do any additional setup after loading the view.
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         setupUI()
     }
     
@@ -141,13 +141,11 @@ class ProductsViewController: UIViewController {
         bestCarsCollectionView.register(CarCell.self, forCellWithReuseIdentifier: CarCell.reuseIdentifier)
     }
     
-    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             brandsLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             brandsLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             brandsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
             
             logosCollectionView.topAnchor.constraint(equalTo: brandsLabel.bottomAnchor, constant: 20),
             logosCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -165,10 +163,8 @@ class ProductsViewController: UIViewController {
             bestCarsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             bestCarsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             bestCarsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
         ])
     }
-    
 }
 
 extension ProductsViewController: UICollectionViewDataSource {
@@ -198,13 +194,10 @@ extension ProductsViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
     }
-    
-    
 }
 
 extension ProductsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         switch collectionView.tag {
         case 1:
             let collectionViewHeight = collectionView.frame.height / 1.2
@@ -219,7 +212,6 @@ extension ProductsViewController: UICollectionViewDelegateFlowLayout {
             let height: CGFloat = width * 1.8
             
             return CGSize(width: width, height: height)
-            
         default:
             return CGSize(width: 120, height: 150)
         }
@@ -227,7 +219,6 @@ extension ProductsViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ProductsViewController: UICollectionViewDelegate {
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch collectionView.tag {
         case 1:
