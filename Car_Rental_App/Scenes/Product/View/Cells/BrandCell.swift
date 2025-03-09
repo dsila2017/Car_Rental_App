@@ -14,6 +14,8 @@ class BrandCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
+        imageView.backgroundColor = .tertiarySystemBackground
+        imageView.layer.cornerRadius = 8
         return imageView
     }()
     
@@ -21,14 +23,19 @@ class BrandCell: UICollectionViewCell {
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .black
+        label.textColor = .label
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         contentView.addSubview(logoImageView)
         contentView.addSubview(nameLabel)
+        
+        contentView.backgroundColor = .secondarySystemBackground
+        contentView.layer.cornerRadius = 12
+        contentView.clipsToBounds = true
         
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -39,6 +46,7 @@ class BrandCell: UICollectionViewCell {
             logoImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             logoImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.7),
             
+            nameLabel.topAnchor.constraint(equalTo: logoImageView.bottomAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)

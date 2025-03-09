@@ -18,7 +18,7 @@ class CarCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .systemGray4
+        imageView.backgroundColor = .tertiarySystemBackground // Updated for better contrast
         imageView.layer.cornerRadius = 8
         return imageView
     }()
@@ -26,30 +26,28 @@ class CarCell: UICollectionViewCell {
     private let brandLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .black
-        //label.backgroundColor = .green
+        label.textColor = .label // Adapts to light/dark mode
         return label
     }()
     
     private let modelLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .gray
-        //label.backgroundColor = .yellow
+        label.textColor = .secondaryLabel // Softer contrast
         return label
     }()
     
     private let engineTypeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .darkGray
+        label.textColor = .tertiaryLabel // Even softer for metadata
         return label
     }()
     
     private let msrpLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.textColor = .black
+        label.textColor = .label
         return label
     }()
     
@@ -58,37 +56,35 @@ class CarCell: UICollectionViewCell {
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.alignment = .center
-        //stackView.backgroundColor = .red
         return stackView
     }()
     
     private lazy var bottomStackView: UIStackView = {
-       let stackView = UIStackView(arrangedSubviews: [transmissionStack, wheelDriveStack, msrpStack])
+        let stackView = UIStackView(arrangedSubviews: [transmissionStack, wheelDriveStack, msrpStack])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 0
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        //stackView.backgroundColor = .red
         return stackView
     }()
     
     private let transmissionStack: CustomLogoStackView = {
         let stackView = CustomLogoStackView()
-        stackView.configure(image: UIImage(systemName: "steeringwheel")!, color: .darkGray, text: "Auto")
+        stackView.configure(image: UIImage(systemName: "steeringwheel")!, color: .label, text: "Auto")
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
     private let wheelDriveStack: CustomLogoStackView = {
         let stackView = CustomLogoStackView()
-        stackView.configure(image: UIImage(systemName: "tire")!, color: .darkGray, text: "FWD")
+        stackView.configure(image: UIImage(systemName: "tire")!, color: .secondaryLabel, text: "FWD")
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
     private let msrpStack: CustomLogoStackView = {
         let stackView = CustomLogoStackView()
-        stackView.configure(image: UIImage(systemName: "dollarsign.gauge.chart.lefthalf.righthalf")!, color: .darkGray, text: "$246900")
+        stackView.configure(image: UIImage(systemName: "dollarsign.gauge.chart.lefthalf.righthalf")!, color: .systemGreen, text: "$246900")
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -113,8 +109,7 @@ class CarCell: UICollectionViewCell {
     private func setupCellStyle() {
         contentView.layer.cornerRadius = 12
         contentView.clipsToBounds = true
-        
-        contentView.backgroundColor = .systemGray5
+        contentView.backgroundColor = .secondarySystemBackground // Updated for Apple's guidelines
     }
     
     private func setupViews() {
@@ -133,7 +128,6 @@ class CarCell: UICollectionViewCell {
         engineTypeAndMsrpStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            
             brandLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             brandLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
             brandLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
@@ -155,8 +149,7 @@ class CarCell: UICollectionViewCell {
             bottomStackView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             bottomStackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
             bottomStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
-            bottomStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            //bottomStackView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.14)
+            bottomStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
     }
     
@@ -169,23 +162,12 @@ class CarCell: UICollectionViewCell {
         
         imageView.kf.setImage(
             with: url,
-            placeholder: nil,
-            options: [
-                .cacheOriginalImage
-            ],
-            progressBlock: { receivedSize, totalSize in
-            },
+            options: [.cacheOriginalImage],
             completionHandler: { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success:
-                    self.activityIndicator.stopAnimating()
-                case .failure(let error):
-                    print("Error loading image: \(error.localizedDescription)")
-                    self.activityIndicator.stopAnimating()
-                }
+                self?.activityIndicator.stopAnimating()
             }
         )
+        
         brandLabel.text = brand
         modelLabel.text = model
         engineTypeLabel.text = engineType
