@@ -88,7 +88,7 @@ class ProductsViewController: UIViewController {
             self?.reloadUIComponentsData()
         }
         
-        viewModel.fetchCars(with: .size)
+        viewModel.fetchCars(with: .size, brand: nil)
         
         view.backgroundColor = .systemBackground
         setupUI()
@@ -101,7 +101,7 @@ class ProductsViewController: UIViewController {
     private func handleSortAction(actionTitle: String, filterType: FetchType) {
         scrollToTop()
         viewModel.updateMainLabelText(to: actionTitle)
-        viewModel.fetchCars(with: filterType)
+        viewModel.fetchCars(with: filterType, brand: nil)
     }
     
     private func setupUI() {
@@ -183,12 +183,12 @@ extension ProductsViewController: UICollectionViewDataSource {
         switch collectionView.tag {
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BrandCell.reuseIdentifier, for: indexPath) as! BrandCell
-            cell.configure(name: viewModel.brandList[indexPath.row])
+            cell.configure(name: viewModel.brandList[indexPath.row].name)
             return cell
         case 2:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CarCell.reuseIdentifier, for: indexPath) as! CarCell
             let car = viewModel.carList[indexPath.row]
-            cell.configure(with: car.makeModelTrim.makeModel.make.name, model: car.makeModelTrim.makeModel.name, engineType: car.engineType, msrp: car.makeModelTrim.msrp)
+            cell.configure(with: car.makeModelTrim.makeModel.make.name, model: car.makeModelTrim.makeModel.name, engineType: car.engineType, transmission: car.transmission, driveTrain: car.driveType, msrp: car.makeModelTrim.msrp)
             return cell
         default:
             return UICollectionViewCell()
@@ -219,12 +219,24 @@ extension ProductsViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ProductsViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let car = viewModel.carList[indexPath.row]
         switch collectionView.tag {
         case 1:
-            print("Brand selected")
+            print(" ")
+            viewModel.selectedBrand = viewModel.brandList[indexPath.row]
+            viewModel.fetchCars(with: .size, brand: viewModel.brandList[indexPath.row])
+            viewModel.updateMainLabelText(to: "Featured")
         case 2:
             print("Car selected")
+            let vc = CarDetailsViewController()
+            if let cell = collectionView.cellForItem(at: indexPath) as? CarCell {
+                guard let carImage = cell.getCarImage() else { return }
+                vc.setupView(carModel: car, image: carImage)
+                navigationController?.pushViewController(vc, animated: true)
+                
+            }
         default:
             break
         }

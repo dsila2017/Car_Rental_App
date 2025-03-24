@@ -24,11 +24,19 @@ struct EngineResponse: Decodable {
 // Engine Model
 struct Engine: Decodable {
     let engineType: String
+    let fuelType: String
+    let cylinders: String?
+    let horsepower: Int?
+    let transmission: String
     let makeModelTrim: MakeModelTrim
     let driveType: String
     
     enum CodingKeys: String, CodingKey {
         case engineType = "engine_type"
+        case fuelType = "fuel_type"
+        case cylinders = "cylinders"
+        case horsepower = "horsepower_hp"
+        case transmission = "transmission"
         case makeModelTrim = "make_model_trim"
         case driveType = "drive_type"
     }
