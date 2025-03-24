@@ -11,7 +11,8 @@ class ProductViewModel {
     
     private let networkManager: NetworkManager = NetworkManager.shared
     
-    var brandList: [String] = ["Tesla", "Toyota", "Honda", "Ford", "Nissan", "Audi", "BMW", "Volvo", "Mercedes", "Kia"]
+    var brandList = BrandList.allCases.map { $0 }
+    var selectedBrand: BrandList?
     
     var mainTextLabel: String = "Featured"
     
@@ -20,8 +21,24 @@ class ProductViewModel {
     var reloadCollectionView: (() -> Void)?
     var reloadUIComponents: (() -> Void)?
     
-    func fetchCars(with: FetchType) {
-        networkManager.fetchEngineData(with: with) { [weak self] result in
+    func getCorrectURL(with: FetchType, brand: BrandList?) -> String {
+        var url: String = ""
+        
+        url = "https://car-api2.p.rapidapi.com/api/engines?limit=24&verbose=yes&year=2020&page=1&direction=desc&sort=\(with)"
+        
+        guard let selectedBrand else {
+            print(url)
+            return url
+        }
+        
+        url = "https://car-api2.p.rapidapi.com/api/engines?limit=24&verbose=yes&make_id=\(selectedBrand.rawValue)&year=2020&page=1&direction=desc&sort=\(with)"
+        
+        print(url)
+        return url
+    }
+    
+    func fetchCars(with: FetchType, brand: BrandList?) {
+        networkManager.fetchEngineData(url: getCorrectURL(with: with, brand: brand)) { [weak self] result in
             switch result {
                 case .success(let engineResponse):
                 self?.carList = engineResponse
@@ -37,4 +54,32 @@ class ProductViewModel {
         mainTextLabel = newText
         self.reloadUIComponents?()
     }
+}
+
+enum BrandList: Int, CaseIterable {
+    case Tesla = 42
+    case Toyota = 22
+    case Honda = 9
+    case Ford = 29
+    case Nissan = 19
+    case Audi = 2
+    case BMW = 3
+    case Volvo = 23
+    case Mercedes = 37
+    case Kia = 13
+    
+    var name: String {
+            switch self {
+            case .Tesla: return "Tesla"
+            case .Toyota: return "Toyota"
+            case .Honda: return "Honda"
+            case .Ford: return "Ford"
+            case .Nissan: return "Nissan"
+            case .Audi: return "Audi"
+            case .BMW: return "BMW"
+            case .Volvo: return "Volvo"
+            case .Mercedes: return "Mercedes"
+            case .Kia: return "Kia"
+            }
+        }
 }

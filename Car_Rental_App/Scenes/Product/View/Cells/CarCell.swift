@@ -18,7 +18,7 @@ class CarCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .tertiarySystemBackground // Updated for better contrast
+        imageView.backgroundColor = .tertiarySystemBackground
         imageView.layer.cornerRadius = 8
         return imageView
     }()
@@ -26,21 +26,21 @@ class CarCell: UICollectionViewCell {
     private let brandLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .label // Adapts to light/dark mode
+        label.textColor = .label
         return label
     }()
     
     private let modelLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .secondaryLabel // Softer contrast
+        label.textColor = .secondaryLabel
         return label
     }()
     
     private let engineTypeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .tertiaryLabel // Even softer for metadata
+        label.textColor = .tertiaryLabel
         return label
     }()
     
@@ -109,7 +109,7 @@ class CarCell: UICollectionViewCell {
     private func setupCellStyle() {
         contentView.layer.cornerRadius = 12
         contentView.clipsToBounds = true
-        contentView.backgroundColor = .secondarySystemBackground // Updated for Apple's guidelines
+        contentView.backgroundColor = .secondarySystemBackground
     }
     
     private func setupViews() {
@@ -153,7 +153,7 @@ class CarCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with brand: String, model: String, engineType: String, msrp: Int) {
+    func configure(with brand: String, model: String, engineType: String, transmission: String, driveTrain: String, msrp: Int) {
         let imageURLString = "https://cdn.imagin.studio/getimage?customer=img&zoomType=fullscreen&randomPaint=true&modelFamily=\(model)&make=\(brand)&modelYear=2020&angle=front"
         
         guard let url = URL(string: imageURLString) else { return }
@@ -168,11 +168,19 @@ class CarCell: UICollectionViewCell {
             }
         )
         
+        let info = infoTransform(transmission: transmission, drivetrain: driveTrain)
+        
         brandLabel.text = brand
         modelLabel.text = model
         engineTypeLabel.text = engineType
-        msrpLabel.text = "$\(msrp)"
+        transmissionStack.configure(text: info.transmission)
+        wheelDriveStack.configure(text: info.drivetrain)
+        msrpStack.configure(text: "$\(msrp)")
     }
+    
+    func getCarImage() -> UIImage? {
+        return imageView.image
+        }
     
     private func clearCell() {
         imageView.kf.cancelDownloadTask()
@@ -182,6 +190,27 @@ class CarCell: UICollectionViewCell {
         engineTypeLabel.text = nil
         msrpLabel.text = nil
         activityIndicator.stopAnimating()
+    }
+    
+    private func infoTransform(transmission: String, drivetrain: String) -> (transmission: String, drivetrain: String) {
+        var transformedTransmission = ""
+        var transformedDrivetrain = ""
+        
+        if transmission.lowercased().contains("manual") {
+            transformedTransmission = "Manual"
+        } else {
+            transformedTransmission = "Auto"
+        }
+        
+        if drivetrain.lowercased().contains("front") {
+            transformedDrivetrain = "FWD"
+        } else if drivetrain.lowercased().contains("rear") {
+            transformedDrivetrain = "RWD"
+        } else {
+            transformedDrivetrain = "AWD"
+        }
+        
+        return (transmission: transformedTransmission, drivetrain: transformedDrivetrain)
     }
 }
 
@@ -197,7 +226,6 @@ class CustomLogoStackView: UIStackView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        //imageView.backgroundColor = .green
         return imageView
     }()
     
@@ -208,7 +236,6 @@ class CustomLogoStackView: UIStackView {
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 10, weight: .medium)
         label.textColor = .darkGray
-        //label.backgroundColor = .yellow
         return label
     }()
 
@@ -243,6 +270,10 @@ class CustomLogoStackView: UIStackView {
     func configure(image: UIImage?, color: UIColor?, text: String) {
         imageView.image = image
         imageView.tintColor = color
+        titleLabel.text = text
+    }
+    
+    func configure(text: String) {
         titleLabel.text = text
     }
 }

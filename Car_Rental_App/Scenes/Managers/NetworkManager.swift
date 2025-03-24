@@ -98,7 +98,6 @@ public class NetworkManager {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        // Add headers if provided
         if let headers = headers {
             for (key, value) in headers {
                 request.addValue(value, forHTTPHeaderField: key)
@@ -152,10 +151,9 @@ public class NetworkManager {
         })
         task.resume()
     }
-
     
-    func fetchEngineData(with: FetchType, completion: @escaping (Result<[Engine], Error>) -> Void) {
-        let url = "https://car-api2.p.rapidapi.com/api/engines?limit=24&verbose=yes&year=2020&page=1&direction=desc&sort=\(with)"
+    
+    func fetchEngineData(url: String, completion: @escaping (Result<[Engine], Error>) -> Void) {
         
         let headers = [
             "x-rapidapi-key": "cf9c2725b9msh661dfd01332799ap12f657jsn999a050acd54",
@@ -171,8 +169,8 @@ public class NetworkManager {
             }
         }
     }
-
-
+    
+    
     
     enum NetworkError: Error {
         case invalidURL, httpError(statusCode: Int), noData, decodingFailed
