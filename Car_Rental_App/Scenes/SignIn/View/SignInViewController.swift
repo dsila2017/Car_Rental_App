@@ -17,7 +17,8 @@ final class SignInViewController: UIViewController {
     lazy var logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "car")
+        imageView.image = UIImage(named: "Porsche")
+        imageView.contentMode = .scaleAspectFill
         imageView.tintColor = .black
         return imageView
     }()
@@ -174,7 +175,7 @@ final class SignInViewController: UIViewController {
 
             logoImageView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
             logoImageView.topAnchor.constraint(equalTo: topView.topAnchor, constant: 20),
-            logoImageView.widthAnchor.constraint(equalTo: topView.widthAnchor, multiplier: 0.5),
+            logoImageView.widthAnchor.constraint(equalTo: topView.widthAnchor, multiplier: 0.7),
             logoImageView.heightAnchor.constraint(equalTo: topView.heightAnchor, multiplier: 0.4),
 
             loginItemsView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 20),

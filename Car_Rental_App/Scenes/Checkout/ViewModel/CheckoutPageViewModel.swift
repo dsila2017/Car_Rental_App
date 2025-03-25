@@ -43,8 +43,4 @@ class CheckoutPageViewModel {
             }
         }
     }
-    
-    func enterButtonPressed(vin: String) {
-        
-    }
 }
