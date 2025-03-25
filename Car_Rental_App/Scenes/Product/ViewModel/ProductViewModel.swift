@@ -38,10 +38,10 @@ class ProductViewModel {
     }
     
     func fetchCars(with: FetchType, brand: BrandList?) {
-        networkManager.fetchEngineData(url: getCorrectURL(with: with, brand: brand)) { [weak self] result in
+        networkManager.fetchEngineData(url: getCorrectURL(with: with, brand: brand)) { [weak self] (result: Result<EngineResponse, Error>) in
             switch result {
                 case .success(let engineResponse):
-                self?.carList = engineResponse
+                self?.carList = engineResponse.data
                 self?.reloadCollectionView?()
                 print(self?.carList.count)
             case .failure(let error):

@@ -153,17 +153,17 @@ public class NetworkManager {
     }
     
     
-    func fetchEngineData(url: String, completion: @escaping (Result<[Engine], Error>) -> Void) {
+    func fetchEngineData<T: Decodable>(url: String, completion: @escaping (Result<T, Error>) -> Void) {
         
         let headers = [
             "x-rapidapi-key": "cf9c2725b9msh661dfd01332799ap12f657jsn999a050acd54",
             "x-rapidapi-host": "car-api2.p.rapidapi.com"
         ]
         
-        fetchDataAPI(url: url, headers: headers) { (result: Result<EngineResponse, Error>) in
+        fetchDataAPI(url: url, headers: headers) { (result: Result<T, Error>) in
             switch result {
             case .success(let response):
-                completion(.success(response.data))
+                completion(.success(response))
             case .failure(let error):
                 completion(.failure(error))
             }
