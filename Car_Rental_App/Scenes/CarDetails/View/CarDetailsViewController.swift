@@ -80,14 +80,19 @@ class CarDetailsViewController: UIViewController {
         return label
     }()
     
-    private let purchaseButton: UIButton = {
+    private lazy var purchaseButton: UIButton = {
         let button = UIButton()
         var config = UIButton.Configuration.filled()
-        config.title = "Purchase"
+        config.title = "Checkout"
         config.baseBackgroundColor = .black
         config.baseForegroundColor = .white
         config.cornerStyle = .medium
         button.configuration = config
+        button.addAction(UIAction(handler: { [weak self] _ in
+            let vc = CheckoutPageVC()
+            vc.setupCar(image: (self?.mainImageView.image)!, brand: (self?.brandStack.rightLabel.text)!, model: (self?.modelStack.rightLabel.text)!, price: (self?.priceLabel.text)!)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -96,7 +101,6 @@ class CarDetailsViewController: UIViewController {
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
         stack.distribution = .equalSpacing
-        //stack.spacing = 140
         return stack
     }()
     
@@ -306,7 +310,7 @@ class CustomInfoStack: UIStackView {
         return label
     }()
     
-    private let rightLabel: UILabel = {
+    let rightLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .right
         label.font = UIFont.preferredFont(forTextStyle: .body)
