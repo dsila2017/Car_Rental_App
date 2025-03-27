@@ -45,7 +45,16 @@ class SuccessVC: UIViewController {
     }
     
     @objc func closeButtonTapped() {
-        navigationController?.isNavigationBarHidden = true
-        navigationController?.popToRootViewController(animated: true)
+        if let navigationController = navigationController {
+            // Look for ProductsViewController in the navigation stack
+            if let targetVC = navigationController.viewControllers.first(where: { $0 is ProductsViewController }) {
+                navigationController.isNavigationBarHidden = true
+                navigationController.popToViewController(targetVC, animated: true)
+            } else {
+                // Fallback: Pop to root if ProductsViewController isn't found
+                navigationController.isNavigationBarHidden = true
+                navigationController.popToRootViewController(animated: true)
+            }
+        }
     }
 }

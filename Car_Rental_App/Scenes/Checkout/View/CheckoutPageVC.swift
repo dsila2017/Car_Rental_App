@@ -23,7 +23,6 @@ class CheckoutPageVC: UIViewController {
     let purchaseLabel: UILabel = {
         let label = UILabel()
         label.text = "Checkout"
-        // Use bold variant of title1
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .title1)
         let boldDescriptor = descriptor.addingAttributes([.traits: [UIFontDescriptor.TraitKey.weight: UIFont.Weight.bold]])
         label.font = UIFont(descriptor: boldDescriptor, size: 0)
@@ -38,7 +37,6 @@ class CheckoutPageVC: UIViewController {
     private let tradeInLabel: UILabel = {
         let label = UILabel()
         label.text = "Trade In"
-        // Use bold variant of title1
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .title1)
         let boldDescriptor = descriptor.addingAttributes([.traits: [UIFontDescriptor.TraitKey.weight: UIFont.Weight.bold]])
         label.font = UIFont(descriptor: boldDescriptor, size: 0)
@@ -130,6 +128,16 @@ class CheckoutPageVC: UIViewController {
         return ImageStackView(image: UIImage(systemName: "car")!, brand: "Tesla", model: "Model S", price: "$75,000")
     }()
     
+    private let loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.color = .gray
+        indicator.hidesWhenStopped = true
+        indicator.isAccessibilityElement = true
+        indicator.accessibilityLabel = "Loading trade-in information"
+        return indicator
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -143,6 +151,7 @@ class CheckoutPageVC: UIViewController {
     
     private func setupUI() {
         view.addSubview(mainStack)
+        view.addSubview(loadingIndicator)
         view.backgroundColor = .systemBackground
         setupNav()
         setupMainStack()
@@ -155,14 +164,17 @@ class CheckoutPageVC: UIViewController {
             print(vehicle.year.description)
             self?.tradeInImageStackView.updateContent(image: nil, brand: vehicle.make, model: vehicle.model, price: "-\(vehicle.trims.first?.msrp ?? 0) $")
             self?.changeVisibility()
+            self?.showLoadingIndicator()
         }
         
         viewModel.onError = { [weak self] errorMessage in
+            self?.hideLoadingIndicator()
             self?.showAlert(title: "Error", message: errorMessage)
         }
         
         viewModel.onVehicleImageUpdated = { [weak self] image in
             self?.tradeInImageStackView.updateImage(image: image)
+            self?.hideLoadingIndicator()
         }
     }
     
@@ -207,12 +219,23 @@ class CheckoutPageVC: UIViewController {
     
     private func changeVisibility() {
         self.isTradeInVisible = true
-        self.changeTradeInVisibility(isHidden: !(self.isTradeInVisible))
+        self.changeTradeInVisibility(isHidden: false)
+        self.showLoadingIndicator()
     }
     
     private func tapPurchase() {
         let vc = SuccessVC()
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func showLoadingIndicator() {
+        loadingIndicator.startAnimating()
+        tradeInImageStackView.isHidden = true
+    }
+    
+    private func hideLoadingIndicator() {
+        loadingIndicator.stopAnimating()
+        tradeInImageStackView.isHidden = false
     }
     
     private func setupConstraints() {
@@ -237,6 +260,9 @@ class CheckoutPageVC: UIViewController {
             purchaseButton.heightAnchor.constraint(equalTo: mainStack.heightAnchor, multiplier: 0.07),
             
             tradeInTextField.widthAnchor.constraint(equalTo: tradeInTextFieldStack.widthAnchor, multiplier: 0.9),
+            
+            loadingIndicator.centerXAnchor.constraint(equalTo: tradeInImageStackView.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: tradeInImageStackView.centerYAnchor),
         ])
     }
 }
